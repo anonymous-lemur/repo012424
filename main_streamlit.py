@@ -4,6 +4,8 @@ from stpyvista import stpyvista
 import numpy as np
 import selfies as sf
 
+pyvista.start_xvfb()
+
 # Bond lengths in picometers, equivalent to 0.01 angstrom
 
 bonds1 = {

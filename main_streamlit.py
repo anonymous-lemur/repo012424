@@ -1,4 +1,4 @@
-vimport streamlit as st
+import streamlit as st
 import pyvista as pv
 from stpyvista import stpyvista
 import numpy as np

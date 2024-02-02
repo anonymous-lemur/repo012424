@@ -172,7 +172,20 @@ if 'show_smiles' not in st.session_state:
 if 'show_property' not in st.session_state:
     st.session_state.show_property = ''
 
+st.markdown("<h1 style='text-align: center;'>TrustMol</h1>", unsafe_allow_html=True)
+st.markdown("<h5 style='text-align: center;'>Trustworthy Inverse Molecular Design</h5>", unsafe_allow_html=True)
 
+
+st.divider()
+txt_instruction = st.text('Instruction: ')
+txt_ins1 = st.text('1. Set the target values for each property using the sliders.')
+txt_ins2 = st.text('2. Click the \'generate\' button to generate the molecule.')
+txt_ins3 = st.text('The SMILES string and NFP-calculated properties will be shown in text.')
+txt_ins4 = st.text('The molecule will be visualized in 3D under the texts.')
+txt_ins5 = st.text('In case the molecule is not shown (usually after the first visualization), click the \'generate\' button again.')
+
+
+st.divider()
 
 s_homo = st.slider("Highest Occupied Molecular Orbital (eV)", key = "s_homo", disabled = False, 
                    min_value = st.session_state.range_homo[0], max_value = st.session_state.range_homo[1], step = 0.5556, value = -8.)
@@ -182,12 +195,6 @@ s_dipole = st.slider("Dipole Moment (Debeye)", key = "s_dipole", disabled = Fals
                      min_value = st.session_state.range_dipole[0], max_value = st.session_state.range_dipole[1], step = 0.4444, value = 0.)
 
 b_generate = st.button(label = "generate", on_click=b_generate_callback)
-txt_instruction = st.text('Instruction: ')
-txt_ins1 = st.text('1. Set the target values for each property using the sliders above.')
-txt_ins2 = st.text('2. Click the \'generate\' button to generate the molecule.')
-txt_ins3 = st.text('The SMILES string and NFP-calculated properties will be shown in text.')
-txt_ins4 = st.text('The molecule will be visualized in 3D under the texts.')
-txt_ins5 = st.text('In case the molecule is not shown (usually after the first visualization), click the \'generate\' button again.')
 
 st.divider()
 

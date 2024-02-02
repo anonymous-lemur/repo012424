@@ -3,10 +3,12 @@ import pyvista as pv
 from stpyvista import stpyvista
 import numpy as np
 import selfies as sf
+import os
+    
+from sys import platform
 
-pv.start_xvfb()
+pv.start_xvfb() # comment this line if you are not using Linux or have a display
 
-# Bond lengths in picometers, equivalent to 0.01 angstrom
 
 bonds1 = {
     'H': {'H': 74, 'C': 109, 'N': 101, 'O': 96, 'F': 92,
@@ -50,10 +52,13 @@ data_dic = {
     ]
 }
 
+@st.cache_data
+def load_precomputed_results(npz_path):
+    mols_dic = dict(np.load(npz_path, allow_pickle=True))['mols'].item()
+    return mols_dic
+
 npz_path = './precomputed_results.npz'
-mols_dic = dict(np.load(npz_path, allow_pickle=True))['mols'].item()
-
-
+mols_dic = load_precomputed_results(npz_path)
 
 
 def b_generate_callback():
@@ -150,10 +155,6 @@ def generate_graph(atoms, coordinates, node_radius=0.4, edge_radius=0.1):
 
     return plotter    
 
-# # st.session_state.dis_homo = not(s_radio == 'HOMO' or s_radio == 'Multi Objectives')
-# # st.session_state.dis_lumo = not(s_radio == 'LUMO' or s_radio == 'Multi Objectives')
-# # st.session_state.dis_dipole = not(s_radio == 'Dipole Moment' or s_radio == 'Multi Objectives')
-
 st.session_state.range_homo = [-8., -3.]
 st.session_state.range_lumo = [-3., 2.]
 st.session_state.range_dipole = [0., 4.]
@@ -180,29 +181,30 @@ s_lumo = st.slider("Lowest Unoccupied Molecular Orbital (eV)", key = "s_lumo", d
 s_dipole = st.slider("Dipole Moment (Debeye)", key = "s_dipole", disabled = False, 
                      min_value = st.session_state.range_dipole[0], max_value = st.session_state.range_dipole[1], step = 0.4444, value = 0.)
 
-# s_homo = st.slider("Highest Occupied Molecular Orbital (eV)", key = "s_homo", disabled = st.session_state.dis_homo, 
-#                    min_value = st.session_state.range_homo[0], max_value = st.session_state.range_homo[1], step = 0.5556, value = -8.)
-# s_lumo = st.slider("Lowest Unoccupied Molecular Orbital (eV)", key = "s_lumo", disabled = st.session_state.dis_lumo, 
-#                    min_value = st.session_state.range_lumo[0], max_value = st.session_state.range_lumo[1], step = 0.5556, value = 2.)
-# s_dipole = st.slider("Dipole Moment (Debeye)", key = "s_dipole", disabled = st.session_state.dis_dipole, 
-#                      min_value = st.session_state.range_dipole[0], max_value = st.session_state.range_dipole[1], step = 0.4444, value = 0.)
-
 b_generate = st.button(label = "generate", on_click=b_generate_callback)
-txt_info = st.text('Note: due to some bugs, to visualize the generated molecule after the first run,\nyou need to click the "generate" button two times in a row.')
+txt_instruction = st.text('Instruction: ')
+txt_ins1 = st.text('1. Set the target values for each property using the sliders above.')
+txt_ins2 = st.text('2. Click the \'generate\' button to generate the molecule.')
+txt_ins3 = st.text('The SMILES string and NFP-calculated properties will be shown in text.')
+txt_ins4 = st.text('The molecule will be visualized in 3D under the texts.')
+txt_ins5 = st.text('In case the molecule is not shown (usually after the first visualization), click the \'generate\' button again.')
 
 st.divider()
 
 txt_smiles = st.text('Generated SMILES: ' + st.session_state.show_smiles)
 txt_props = st.text('Molecule\'s properties:' + st.session_state.show_property)
+txt_vis = st.text('3D Visualization: ')
 
+container = st.container(height = 512, border=True)
 if st.session_state.show_mol:
     with st.spinner('updating molecule...'):
-        plotter = generate_graph(st.session_state.show_atoms, st.session_state.show_coords)
-        
-        ## Final touches
-        plotter.view_isometric()
-        plotter.background_color = 'white'
+        with container:
+            plotter = generate_graph(st.session_state.show_atoms, st.session_state.show_coords)
+            
+            ## Final touches
+            plotter.view_isometric()
+            plotter.background_color = 'white'
 
-        ## Send to streamlit
-        stpyvista(plotter, key="pv_mol")
+            ## Send to streamlit
+            stpyvista(plotter, key="pv_mol")
 

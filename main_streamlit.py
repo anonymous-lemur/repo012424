@@ -123,7 +123,7 @@ def generate_graph(atoms, coordinates, node_radius=0.4, edge_radius=0.1):
     """
     nodes = np.array(coordinates)
     edges = []
-    node_color = {'H': 'white', 'C': 'blue', 'N': 'green', 'O': 'red', 'F': 'grey'}
+    node_color = {'H': 'white', 'C': 'grey', 'N': 'blue', 'O': 'red', 'F': 'green'}
 
     for i in range(len(atoms)):
         for j in range(i+1, len(atoms)):
@@ -202,7 +202,7 @@ txt_smiles = st.text('Generated SMILES: ' + st.session_state.show_smiles)
 txt_props = st.text('Molecule\'s properties:' + st.session_state.show_property)
 txt_vis = st.text('3D Visualization: ')
 
-container = st.container(height = 512, border=True)
+container = st.container(height = 400, border=True)
 if st.session_state.show_mol:
     with st.spinner('updating molecule...'):
         with container:

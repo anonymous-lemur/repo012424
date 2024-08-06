@@ -3,3 +3,4 @@ pyvista
 stpyvista
 numpy
 selfies
+bokeh==2.4.0

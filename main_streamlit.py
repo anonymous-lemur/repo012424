@@ -66,9 +66,10 @@ def load_precomputed_results(npz_path):
 npz_path = './precomputed_results.npz'
 mols_dic = load_precomputed_results(npz_path)
 
-
 def b_generate_callback():
-    st.runtime.legacy_caching.clear_cache()
+    # st.runtime.legacy_caching.clear_cache()
+    st.cache_data.clear()
+    st.cache_resource.clear()
     homo_target = s_homo
     lumo_target = s_lumo
     dipole_target = s_dipole
